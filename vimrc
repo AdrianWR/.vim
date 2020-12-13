@@ -37,6 +37,7 @@ Plugin 'vim-airline/vim-airline'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'vim-test/vim-test'
 Plugin 'gioele/vim-autoswap'
+Plugin 'pbondoer/vim-42header'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -62,12 +63,12 @@ set background=dark
 set number
 
 "General Indent Options
-"set noexpandtab
-"set copyindent
-"set softtabstop=0
-"set shiftwidth=4
-"set tabstop=4
-"set smartindent
+set noexpandtab
+set copyindent
+set softtabstop=0
+set shiftwidth=4
+set tabstop=4
+set smartindent
 
 "Specific Indent Options
 autocmd FileType javascript setlocal shiftwidth=2 softtabstop=2 noexpandtab
@@ -103,3 +104,6 @@ nmap <silent> t<C-f> :TestFile<CR>
 nmap <silent> t<C-s> :TestSuite<CR>
 nmap <silent> t<C-l> :TestLast<CR>
 nmap <silent> t<C-g> :TestVisit<CR>
+
+"Airline Configuration
+let g:airline_powerline_fonts = 1
