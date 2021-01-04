@@ -24,35 +24,17 @@
 set nocompatible
 filetype off 
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'tpope/vim-fugitive'
-Plugin 'ycm-core/YouCompleteMe'
-Plugin 'preservim/nerdtree'
-Plugin 'rafi/awesome-vim-colorschemes'
-Plugin 'vim-airline/vim-airline'
-Plugin 'jiangmiao/auto-pairs'
-Plugin 'vim-test/vim-test'
-Plugin 'gioele/vim-autoswap'
-Plugin 'pbondoer/vim-42header'
-
-call vundle#end()            " required
-filetype plugin indent on    " required
-
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
+call plug#begin()
+	Plug 'preservim/nerdtree', {'on': 'NERDTreeToggle'}
+	Plug 'tpope/vim-fugitive'
+	Plug 'vim-airline/vim-airline'
+	Plug 'rafi/awesome-vim-colorschemes'
+	Plug 'jiangmiao/auto-pairs'
+	Plug 'vim-test/vim-test'
+	Plug 'gioele/vim-autoswap'
+	Plug 'pbondoer/vim-42header'
+	Plug 'neoclide/coc.nvim', {'branch': 'release'}
+call plug#end()
 
 source $VIMRUNTIME/defaults.vim
 set mouse=a
@@ -61,6 +43,9 @@ set mouse=a
 silent! colorscheme PaperColor
 set background=dark
 set number
+
+"<Leader> Key Definition
+let mapleader = ","
 
 "General Indent Options
 set noexpandtab
@@ -72,9 +57,6 @@ set smartindent
 
 "Specific Indent Options
 autocmd FileType javascript setlocal shiftwidth=2 softtabstop=2 noexpandtab
-
-"<Leader> Key Definition
-let mapleader = ","
 
 "Auto-close preview windows
 autocmd CompleteDone * pclose
@@ -92,11 +74,9 @@ nnoremap <F5> :buffers<CR>:buffer<Space>
 "NERDTree Configuration
 map <C-n> :NERDTreeToggle<CR>
 autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
+autocmd VimEnter * NERDTree | wincmd p
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
+    \ quit | endif
 
 "VimTest Configuration
 nmap <silent> t<C-n> :TestNearest<CR>
@@ -107,3 +87,20 @@ nmap <silent> t<C-g> :TestVisit<CR>
 
 "Airline Configuration
 let g:airline_powerline_fonts = 1
+
+"Coc.Nvim Configuration
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
